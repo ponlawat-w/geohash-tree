@@ -16,7 +16,7 @@ const encodeTravel = (output, tree) => {
 module.exports.makeTree = require('./make-tree');
 
 module.exports.encode = (hashesOrTree, format = 'string') => {
-  const tree = typeof hashesOrTree === 'object' ? hashesOrTree : makeTree(hashesOrTree);
+  const tree = Array.isArray(hashesOrTree) ? makeTree(hashesOrTree) : hashesOrTree;
   const output = [];
   encodeTravel(output, tree);
 
