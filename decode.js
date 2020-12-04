@@ -1,27 +1,27 @@
+const decodeBinary = require('./decode-binary');
+const base32 = require('./base32');
+const MARKS = require('./marks');
+
 /**
  * Decode geohash tree string to tree object
- * @param {string} data 
+ * @param {string} str 
  * @returns {object}
  */
-module.exports = data => {
-  const tree = {};
-  const stack = [];
-  let subTree = tree;
-  for (let i = 0; i < data.length; i++) {
-    const char = data[i];
-    const nextChar = data[i + 1];
-    if (char === ']') {
-      subTree = stack.pop();
-    } else {
-      if (nextChar === '[') {
-        stack.push(subTree);
-        subTree[char] = {};
-        subTree = subTree[char];
-        i++;
-      } else {
-        subTree[char] = 1;
+module.exports = str => {
+  const bytes = [];
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === ']') {
+      bytes.push(MARKS.CLOSE_BYTE);
+      continue;
+    }
+
+    let byte = base32.toNumber(str[i]) & MARKS.BASE32_MARK;
+    if (i < str.length - 1) {
+      if (str[i + 1] === '[') {
+        byte |= MARKS.OPEN_MARK; i++;
       }
     }
+    bytes.push(byte);
   }
-  return tree;
+  return decodeBinary(bytes);
 };

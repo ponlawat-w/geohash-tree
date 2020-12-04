@@ -1,15 +1,6 @@
-const encodeTravel = (output, tree) => {
-  const keys = Object.keys(tree);
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    output.push(key);
-    if (typeof tree[key] === 'object') {
-      output.push('[');
-      encodeTravel(output, tree[key]);
-      output.push(']');
-    }
-  }
-};
+const encodeBinary = require('./encode-binary');
+const base32 = require('./base32');
+const MARKS = require('./marks');
 
 /**
  * Encode geohash tree from hash array string or tree object
@@ -18,15 +9,25 @@ const encodeTravel = (output, tree) => {
  * @returns {string|Buffer}
  */
 module.exports = (hashesOrTree, format = 'string') => {
-  const tree = Array.isArray(hashesOrTree) ? require('./make-tree')(hashesOrTree) : hashesOrTree;
-  const output = [];
-  encodeTravel(output, tree);
+  const data = encodeBinary(hashesOrTree, 'array');
+  let output = '';
+
+  for (let i = 0; i < data.length; i++) {
+    if (data[i] === MARKS.CLOSE_BYTE)  {
+      output += ']';
+      continue;
+    }
+    output += base32.toChar(data[i] & MARKS.BASE32_MARK);
+    if (data[i] & MARKS.OPEN_MARK) {
+      output += '[';
+    }
+  }
 
   switch (format.toLowerCase().trim()) {
     case 'string':
-      return output.join('');
+      return output;
     case 'buffer':
-      return Buffer.from(output);
+      return Buffer.from(output, 'utf8');
   }
   return output;
 };
