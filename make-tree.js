@@ -10,6 +10,10 @@ const travel = (geohash, tree) => {
   travel(geohash.slice(1), tree[char]);
 };
 
+/**
+ * Make geohash tree object
+ * @param {string[]} geohashes 
+ */
 module.exports = geohashes => {
   const tree = {};
   for (let i = 0; i < geohashes.length; i++) {
