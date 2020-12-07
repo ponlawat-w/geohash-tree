@@ -18,7 +18,9 @@ module.exports = data => {
     }
     const char = base32.toChar(data[i] & MARKS.BASE32_MARK);
     if (data[i] & MARKS.OPEN_MARK) {
-      subTree[char] = {};
+      if (!subTree[char] || subTree[char] === 1) {
+        subTree[char] = {};
+      }
       stack.push(subTree);
       subTree = subTree[char];
       continue;

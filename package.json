@@ -1,6 +1,6 @@
 {
   "name": "geohash-tree",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Convert geohashes array into hierarchical tree structure",
   "main": "index.js",
   "directories": {
@@ -15,7 +15,6 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "geohash-compression": "^1.0.0"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
